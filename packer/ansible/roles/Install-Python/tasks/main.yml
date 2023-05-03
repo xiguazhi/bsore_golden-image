@@ -1,0 +1,44 @@
+---
+- name: Install development tools
+  dnf:
+    name: '@Development tools'
+    state: present
+
+- name: Make sure wget is installed
+  dnf:
+    name: wget
+    state: present
+
+- name: check if executable is already installed
+  stat:
+    path: /usr/local/bin/python3.10
+  register: python310
+
+
+- name: download Python 3.10
+  wget: 
+    https://www.python.org/ftp/python/{{ PYTHON_VERSION }}/Python-{{ PYTHON_VERSION }}.tgz
+  when: not python310.stat.exists
+
+- name: Install Python 3.10 altversion
+  shell: |
+    cd ./Python-{{ PYTHON_VERSION }}
+    ./configure --enable-optimizations
+    make altinstall
+  when: not python310.stat.exists
+
+- name: Make sure file is there before cleanup
+  stat:
+    path: Python-{{ PYTHON_VERSION }}.tgz
+  register: pyzip
+
+- name: Make sure folder is there before cleanup
+  stat:
+    path: ./Python-{{ PYTHON_VERSION }}
+  register: pyfolder
+
+- name: Cleanup folder and zip file if they have been downloaded
+  shell: |
+    rm -rf Python-{{ PYTHON_VERSION }}.tgz
+    rm -rf ./Python-{{ PYTHON_VERSION}}
+  when: pyzip.stat.exists and pyfolder.stat.exists == true

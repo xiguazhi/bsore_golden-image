@@ -1,0 +1,16 @@
+---
+- name: Add admin key to gha service account
+  authorized_key:
+    user: svc-ghaction
+    key: "{{ ADMIN_KEY }}"
+
+- name: Add admin key to AZ service account
+  authorized_key:
+    user: svc-azcli
+    key: "{{ ADMIN_KEY }}"
+
+
+- name: Add admin key to my user account
+  authorized_key:
+    user: bsoren
+    key: "{{ ADMIN_KEY }}"

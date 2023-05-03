@@ -1,5 +1,3 @@
-377 lines (303 sloc)  9.45 KB
-
 /*
     DESCRIPTION:
     CentOS Stream 8 variables using the Packer Builder for VMware vSphere (vsphere-iso).
@@ -26,6 +24,7 @@ variable "vsphere_username" {
 variable "vsphere_password" {
   type        = string
   description = "The password for the login to the vCenter Server instance."
+  default = env("VSPHERE_PASSWORD")
   sensitive   = true
 }
 
@@ -339,6 +338,7 @@ variable "build_key" {
   type        = string
   description = "The public key to login to the guest operating system."
   sensitive   = true
+  default = env("BUILD_KEY")
 }
 
 variable "communicator_proxy_host" {
@@ -381,6 +381,7 @@ variable "communicator_timeout" {
 variable "ansible_username" {
   type        = string
   description = "The username for Ansible to login to the guest operating system. (e.g. 'ansible')"
+  default = env("BUILD_USER")
   sensitive   = true
 }
 
