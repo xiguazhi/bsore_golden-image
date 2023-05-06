@@ -4,6 +4,7 @@ data "azurerm_resource_group" "bsore-west2-hub" {
 
 data "azurerm_storage_account" "hub-sa" {
   name = "bsorewyhubsa"
+  resource_group_name = data.azurerm_resource_group.bsore-west2-hub.name
 }
 
 resource "azurerm_storage_account_network_rules" "network_rules" {
