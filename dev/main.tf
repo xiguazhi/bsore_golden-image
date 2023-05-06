@@ -20,5 +20,6 @@ terraform {
 
 module "hub_vnet" {
   source = "../common"
-
+  node_count = 3
+  environment = "dev"
 }

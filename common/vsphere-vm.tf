@@ -1,5 +1,5 @@
 module "pipeline" {
-  source           = "git@github.com:xiguazhi/terraform-vsphere.git//modules/wtw-linux-vm"
+  source           = "git@github.com:xiguazhi/terraform-vsphere.git//modules/wtw-vm-linux"
   environment      = var.environment
   vmtemp           = "template-centos8_64Guest"
   application_name = "kubespray"
