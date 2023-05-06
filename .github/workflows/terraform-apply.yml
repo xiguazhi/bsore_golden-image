@@ -9,6 +9,8 @@ env:
   ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
   ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+  TF_VAR_VSPHERE_USER: "${{ secrets.VSPHER_USER }}"
+  TF_VAR_VSPHERE_PASSWORD: "${{ secrets.VSPHERE_PASSWORD }}"
 jobs:
   terraform-dev:
     name: 'Terraform Deploy'
