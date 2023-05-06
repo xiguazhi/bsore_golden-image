@@ -18,3 +18,7 @@ terraform {
     }
 }
 
+module "hub_vnet" {
+  source = "../common"
+  
+}
