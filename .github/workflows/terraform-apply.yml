@@ -27,7 +27,8 @@ jobs:
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
 
-    - name: Terraform format
+    - name: Terraform Format
+      id: fmt
       run: terraform fmt -check
 
     - name: Terraform Init
