@@ -11,14 +11,14 @@ env:
   ARM_TENANT_ID: "${{ secrets.ARM_CLIENT_ID }}"
 jobs:
   terraform-dev:
-    name: 'Terraform'
+    name: 'Terraform Deploy'
     runs-on: self-hosted
-    working-directory: ./dev
     environment: dev
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
+        working-directory: ./dev
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
