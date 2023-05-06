@@ -14,7 +14,7 @@ terraform {
     resource_group_name  = "bsore-wy-hub-rgrp"
     storage_account_name = "bsorewyhubsa"
     container_name       = "tfstate"
-    key                  = "dev.terraform.tfstate"
+    key                  = "dev.tfstate"
   }
 }
 
