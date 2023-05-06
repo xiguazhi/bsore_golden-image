@@ -19,9 +19,9 @@ terraform {
 }
 
 module "hub_vnet" {
-  source      = "../common"
-  node_count  = 3
-  environment = "dev"
-  vsphere_user = var.vsphere_user
+  source           = "../common"
+  node_count       = 3
+  environment      = "dev"
+  vsphere_user     = var.vsphere_user
   vsphere_password = var.vsphere_password
 }

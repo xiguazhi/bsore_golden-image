@@ -1,9 +1,9 @@
 data "azurerm_resource_group" "bsore-west2-hub" {
-  name     = "bsore-WY-hub-rgrp"
+  name = "bsore-WY-hub-rgrp"
 }
 
 data "azurerm_storage_account" "hub-sa" {
-  name     = "bsorewyhubsa"
+  name = "bsorewyhubsa"
 }
 
 resource "azurerm_storage_account_network_rules" "network_rules" {
