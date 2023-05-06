@@ -1,5 +1,3 @@
-377 lines (303 sloc)  9.45 KB
-
 /*
     DESCRIPTION:
     CentOS Stream 8 variables using the Packer Builder for VMware vSphere (vsphere-iso).
@@ -16,6 +14,12 @@ variable "vsphere_endpoint" {
   default = "vcenter.bsorenson.io"
 }
 
+variable "vsphere_host" {
+  type = string
+  description = "IP Address of host to create VM on (because no cluster)"
+  default = "10.0.4.40"
+}
+
 variable "vsphere_username" {
   type        = string
   description = "The username to login to the vCenter Server instance. (e.g. 'svc-packer-vsphere@rainpole.io')"
@@ -26,6 +30,7 @@ variable "vsphere_username" {
 variable "vsphere_password" {
   type        = string
   description = "The password for the login to the vCenter Server instance."
+  default = env("VSPHERE_PASSWORD")
   sensitive   = true
 }
 
@@ -51,7 +56,7 @@ variable "vsphere_cluster" {
 variable "vsphere_datastore" {
   type        = string
   description = "The name of the target vSphere datastore. (e.g. 'sfo-w01-cl01-vsan01')"
-  default = "wdblue"
+  default = "wdBlue"
 }
 
 variable "vsphere_network" {
@@ -125,19 +130,19 @@ variable "vm_cdrom_type" {
 variable "vm_cpu_count" {
   type        = number
   description = "The number of virtual CPUs. (e.g. '2')"
-  default = 1
+  default = 2
 }
 
 variable "vm_cpu_cores" {
   type        = number
   description = "The number of virtual CPUs cores per socket. (e.g. '1')"
-  default = 2
+  default = 1
 }
 
 variable "vm_cpu_hot_add" {
   type        = bool
   description = "Enable hot add CPU."
-  default     = false
+  default     = true
 }
 
 variable "vm_mem_size" {
@@ -148,7 +153,7 @@ variable "vm_mem_size" {
 variable "vm_mem_hot_add" {
   type        = bool
   description = "Enable hot add memory."
-  default     = false
+  default     = true
 }
 
 variable "vm_disk_size" {
@@ -243,7 +248,7 @@ variable "common_ovf_export_overwrite" {
 variable "common_iso_datastore" {
   type        = string
   description = "The name of the source vSphere datastore for ISO images. (e.g. 'sfo-w01-cl01-nfs01')"
-  default = "samsung"
+  default = "[samsung] ISOs/CentOS_8.iso"
 }
 
 variable "iso_path" {
@@ -273,7 +278,7 @@ variable "iso_checksum_value" {
 variable "common_data_source" {
   type        = string
   description = "The provisioning data source. (e.g. 'http' or 'disk')"
-  default = "disk"
+  default = "http"
 }
 
 variable "common_http_ip" {
@@ -301,11 +306,13 @@ variable "vm_boot_order" {
 variable "vm_boot_wait" {
   type        = string
   description = "The time to wait before boot."
+  default = "15s"
 }
 
 variable "common_ip_wait_timeout" {
   type        = string
   description = "Time to wait for guest operating system IP address response."
+  default = "15m"
 }
 
 variable "common_shutdown_timeout" {
@@ -339,6 +346,7 @@ variable "build_key" {
   type        = string
   description = "The public key to login to the guest operating system."
   sensitive   = true
+  default = env("BUILD_KEY")
 }
 
 variable "communicator_proxy_host" {
@@ -381,6 +389,7 @@ variable "communicator_timeout" {
 variable "ansible_username" {
   type        = string
   description = "The username for Ansible to login to the guest operating system. (e.g. 'ansible')"
+  default = env("BUILD_USER")
   sensitive   = true
 }
 

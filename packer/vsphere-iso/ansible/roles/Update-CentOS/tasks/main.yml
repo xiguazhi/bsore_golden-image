@@ -1,0 +1,7 @@
+---
+- name: Update All packages with DNF
+  dnf:
+    name: "*"
+    state: latest
+
+    

@@ -1,0 +1,31 @@
+{
+  "builds": [
+    {
+      "name": "linux-centos-stream",
+      "builder_type": "vsphere-iso",
+      "files": null,
+      "artifact_id": "template-centos8_64guest",
+      "packer_run_uuid": "f36ebd20-b791-8c83-1fde-037afee34ea0",
+      "custom_data": {
+        "ansible_username": "",
+        "build_username": "svc-ansible",
+        "common_data_source": "http",
+        "common_vm_version": "18",
+        "vm_cpu_cores": "1",
+        "vm_cpu_count": "2",
+        "vm_disk_size": "40960",
+        "vm_disk_thin_provisioned": "true",
+        "vm_firmware": "efi-secure",
+        "vm_guest_os_type": "centos8_64guest",
+        "vm_mem_size": "4096",
+        "vm_network_card": "vmxnet3",
+        "vsphere_cluster": "prod",
+        "vsphere_datacenter": "bsorenson.io",
+        "vsphere_datastore": "wdBlue",
+        "vsphere_endpoint": "vcenter.bsorenson.io",
+        "vsphere_folder": "Dev"
+      }
+    }
+  ],
+  "last_run_uuid": "f36ebd20-b791-8c83-1fde-037afee34ea0"
+}
