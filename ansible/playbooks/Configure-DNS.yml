@@ -2,12 +2,12 @@
   hosts: all
   become: true
   vars:
-    ANSIBLE_USER: "{{ lookup('env', 'ANSIBLE_USER') }}"
-    ANSIBLE_PASSWORD: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+    ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
+    ansible_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
     become_password: "{{ ansible_password }}"
   tasks:
-  - name: set hostname for each host
-    hostname:
+  - name: Set hostname for each host
+    ansible.builtin.hostname:
       name: "{{ inventory_hostname }}"
       use: systemd
 
@@ -23,7 +23,8 @@
     - 1.0.0.1
     dns_domains:
     - bsorenson.io
-
   roles:
+  - role: dns
+    tags:
+    - ever
     - dns
-
