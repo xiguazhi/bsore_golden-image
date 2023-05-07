@@ -1,0 +1,13 @@
+- hosts: all
+  become: true
+  vars:
+    ANSIBLE_USER: "{{ lookup('env', 'ANSIBLE_USER') }}"
+    ANSIBLE_PASSWORD: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+    become_password: "{{ ansible_password }}"
+  tasks:
+  - name: set hostname for each host
+    hostname:
+      name: "{{ inventory_hostname }}"
+      use: systemd
+
+- name: Configure DNS server on server
