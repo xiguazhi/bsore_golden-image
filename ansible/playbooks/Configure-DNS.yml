@@ -18,10 +18,12 @@
     ANSIBLE_USER: "{{ lookup('env', 'ANSIBLE_USER') }}"
     ANSIBLE_PASSWORD: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
     become_password: "{{ ansible_password }}"
-  roles:
-  - role: dns
     dns_servers:
     - 1.1.1.1
     - 1.0.0.1
     dns_domains:
     - bsorenson.io
+
+  roles:
+    - dns
+
