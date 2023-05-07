@@ -7,4 +7,8 @@ module "kubespray" {
   vsphere_user     = var.vsphere_user
   vsphere_password = var.vsphere_password
   disk_size_gb     = ["60"]
+  ipv4_address = ["","",""]
+  network_type = ["vmxnet3","vmxnet3","vmxnet3"]
+  ipv4_gateway = "10.0.30.1"
+  ipv4submask = ["24","24","24"]
 }
