@@ -18,13 +18,27 @@
     ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
     ansible_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
     become_password: "{{ ansible_password }}"
-    dns_servers:
-    - 1.1.1.1
-    - 1.0.0.1
-    dns_domains:
-    - bsorenson.io
+    bind__allow_query:
+      - '192.168.1.0/24'
+      - 'localhost'
+    bind__listen_on:
+      - 192.168.1.10
+      - 127.0.0.1
+    bind__allow_recursion: '192.168.1.0/24'
+    bind__empty_contact: 'admin@example.com'
+    bind__global_zones:
+      'test.example.local':
+        type: 'master'
+        file: 'auto'
+        entries:
+          - { name: '@',                 type: 'NS',     data: 'ns1.bsorenson.io' }
+          - { name: 'bsd-bind01',        type: 'A',      data: '10.0.30.167'      }
+          - { name: 'bsd-kubespray01',   type: 'A',      data: '10.0.30.164'      }
+          - { name: 'bsd-kubesrpay02',   type: 'A',      data: '10.0.30.166'      }
+          - { name: 'bsd-kubesrpay03',   type: 'A',      data: '10.0.30.165'      }
+          - { name: 'bsp1-ansible',      type: 'A',      data: '10.0.30.145'      }
   roles:
-  - role: dns
+  - role: Install-Bind
     tags:
     - ever
-    - dns
+    - Install-Bind

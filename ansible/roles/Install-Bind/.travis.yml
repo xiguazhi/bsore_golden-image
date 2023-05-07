@@ -1,0 +1,26 @@
+---
+language: python
+cache: pip
+# Tell Travis to start Docker when it brings up an environment.
+services:
+  - docker
+env:
+  - ANSIBLE='ansible>=2.4.0,<2.5.0'
+  - ANSIBLE='ansible>=2.5.1'
+matrix:
+  fast_finish: true
+
+install:
+  - >
+    pip install
+    ${ANSIBLE}
+    'ansible-lint>=3.4.15'
+    'molecule>=2.13.0'
+    docker
+    'testinfra>=1.7.0'
+
+script:
+  - travis_wait 60 molecule test --all
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
