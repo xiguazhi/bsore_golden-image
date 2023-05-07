@@ -18,6 +18,10 @@ terraform {
   }
 }
 
+provider "azurerm" {
+  features {}
+}
+
 module "hub_vnet" {
   source           = "../common"
   node_count       = 3
