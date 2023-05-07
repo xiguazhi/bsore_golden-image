@@ -1,2 +1,8 @@
-variable "vsphere_user" {}
-variable "vsphere_password" {}
+variable "vsphere_user" {
+    type = string
+    sensitive = true
+}
+variable "vsphere_password" {
+    type = string
+    sensitive = true
+}
