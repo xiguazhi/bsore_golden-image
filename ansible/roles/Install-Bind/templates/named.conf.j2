@@ -1,0 +1,16 @@
+{{ ansible_managed|comment(decoration='// ') }}
+
+{% if bind__acls | length > 0 %}
+// Define ACL
+include "{{ bind__config_acls }}";
+{% endif %}
+
+// Load internal options
+include "{{ bind__config_directory }}/named.conf.options";
+
+// Load zones
+include "{{ bind__config_directory }}/named.conf.zones";
+
+
+#include "{{ bind__config_directory }}/named.conf.local";
+#include "{{ bind__config_directory }}/named.conf.default-zones";

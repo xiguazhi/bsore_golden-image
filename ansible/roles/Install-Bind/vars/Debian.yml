@@ -1,0 +1,13 @@
+---
+# vars file for bind (Debian specific)
+
+bind__packages_names:
+  - bind9
+  - bind9utils
+
+bind__remove_distribution_directories:
+  - /var/cache/bind
+
+bind__service_sysvinit_script: /etc/init.d/bind9
+
+bind__service_environment: /etc/default/bind9

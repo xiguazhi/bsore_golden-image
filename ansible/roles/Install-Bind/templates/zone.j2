@@ -1,0 +1,45 @@
+{%- import '_macros.j2' as macros with context -%}
+{{ ansible_managed|comment(decoration='; ') }}
+
+; This file contains the zone declarations for zone {{ bind__zone.name }}
+{% set zone = bind__zone %}
+{% set domain = bind__zone.name %}
+{% set first_soa = [] %}
+{% set first_ns = [] %}
+{% for entry in zone.entries|d([]) %}
+{#   ## catch the first SOA entry if available #}
+{%   if entry.type == 'SOA' and first_soa|length == 0 %}
+{%     set _ = first_soa.append(entry) %}
+{#   ## catch the first NS entry if available #}
+{%   elif entry.type == 'NS' and first_ns|length == 0 %}
+{%     set _ = first_ns.append(entry.data) %}
+{%   endif %}
+{% endfor %}
+$TTL {{ zone.ttl|d(bind__zones_default_ttl) }}
+$ORIGIN {{ macros.fqdn(domain) }}
+
+{% if first_soa|length == 0 %}
+{# generate an SOA entry with the provided defaults values #}
+{{   macros.rrentry(  {
+                  'name':'@',
+                  'type':'SOA',
+                  'data':
+                    bind__zones_entry_default['SOA']['data']
+                    |combine({
+                      'ns': first_ns[0],
+                      'serial': _bind__zone_serial|d( bind__zones_entry_default['SOA']['data']['serial'] )
+                    })
+              })
+}}
+{% else %}
+{# use the given SOA entry #}
+{{   macros.rrentry(first_soa[0]) }}
+{% endif %}
+;
+{% for entry in zone.entries | d([]) %}
+{#   ## ignore other SOA entries #}
+{%   if entry.type == 'SOA' %}
+{%   else %}
+{{     macros.rrentry(entry) }}
+{%   endif %}
+{% endfor %}
