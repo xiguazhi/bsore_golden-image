@@ -14,7 +14,7 @@
 - name: Configure DNS server on server
   hosts: dns_servers
   become: true
-  var:
+  vars:
     ANSIBLE_USER: "{{ lookup('env', 'ANSIBLE_USER') }}"
     ANSIBLE_PASSWORD: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
     become_password: "{{ ansible_password }}"
