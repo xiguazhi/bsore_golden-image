@@ -41,7 +41,7 @@ module "dns" {
   network = {
     "VM Network" = [""]
   }
-  network_type     = ["vmxnet3"]
-  ipv4_gateway     = "10.0.30.1"
-  ipv4submask      = ["24"]
+  network_type = ["vmxnet3"]
+  ipv4_gateway = "10.0.30.1"
+  ipv4submask  = ["24"]
 }
