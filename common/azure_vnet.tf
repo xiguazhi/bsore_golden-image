@@ -8,8 +8,8 @@ locals {
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "bsore-na26-wy-hub-vnet"
-  location            = azurerm_resource_group.bsore-west2-hub.location
-  resource_group_name = azurerm_resoure_group.bsore-west2-hub.name
+  location            = data.azurerm_resource_group.bsore-west2-hub.location
+  resource_group_name = data.azurerm_resoure_group.bsore-west2-hub.name
   address_space       = [for subnet in var.subnets : subnet.prefix]
 }
 
@@ -18,7 +18,7 @@ resource "azurerm_subnet" "sub" {
   for_each             = local.subnets
   name                 = each.value.name
   address_prefixes     = [each.value.prefix]
-  resource_group_name  = azurerm_resource_group.bsore-west2-hub.name
+  resource_group_name  = data.azurerm_resource_group.bsore-west2-hub.name
   virtual_network_name = azurerm_virtual_network.vnet.name
 }
 
@@ -32,7 +32,7 @@ resource "azurerm_public_ip" "ip" {
 resource "azurerm_local_networK_gateway" "home" {
   name                = "bsore-wy-hub-lng"
   resource_group_name = data.azurerm_resource_group.bsore-west2-hub.name
-  location            = azurerm_resource_group.bsore-west2-hub.location
+  location            = data.azurerm_resource_group.bsore-west2-hub.location
   gateway_address     = "199.192.99.26"
   address_space       = ["10.0.0.0/18"]
 }
