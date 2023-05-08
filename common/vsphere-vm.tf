@@ -28,3 +28,20 @@ module "dns" {
   ipv4_gateway     = "10.0.30.1"
   ipv4submask      = ["24"]
 }
+
+module "dns" {
+  source           = "git@github.com:xiguazhi/terraform-vsphere.git//modules/wtw-vm-linux"
+  environment      = "prod"
+  vmtemp           = "template-centos8_64guest"
+  application_name = "unifi"
+  node_count       = 1
+  vsphere_user     = var.vsphere_user
+  vsphere_password = var.vsphere_password
+  disk_size_gb     = ["60"]
+  network = {
+    "VM Network" = [""]
+  }
+  network_type     = ["vmxnet3"]
+  ipv4_gateway     = "10.0.30.1"
+  ipv4submask      = ["24"]
+}
