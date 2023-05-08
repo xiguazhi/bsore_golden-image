@@ -46,21 +46,15 @@ resource "azurerm_virtual_network_gateway" "s2s" {
   active_active = false
   enable_bgp = true
   sku = "Basic"
+  
   bgp_settings {
     asn = "65515"
   }
+  
   ip_configuration {
     name = "vnetGatewayConfig"
     public_ip_address_id = azurerm_public_ip.ip.id
     private_ip_address_allocation = "Dynamic"
     subnet_id = azurerm_subnet.sub["bsore-Gateway"].id
   }
-  vpn_client_configuration {
-    address_space = ["10.0.0.0/18"]
-    root_certificate {
-      
-    }
-    public_cert_data = <<EOF
-    EOF
-    }
 }
