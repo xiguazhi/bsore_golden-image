@@ -30,8 +30,8 @@ module "hub_vnet" {
   vsphere_password = var.vsphere_password
   subnets = [
     {
-      name   = "bsore-Gateway"
-      prefix = "10.0.70.0/24"
+      name   = "GatewaySubnet"
+      prefix = "10.0.90.0/24"
     },
     {
       name   = "bsore-FrontEnd"

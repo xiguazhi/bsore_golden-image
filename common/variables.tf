@@ -12,8 +12,8 @@ variable "subnets" {
   description = "subnets for VNET and subnet creation in azure"
   default = [
     {
-      name   = "bsore-Gateway"
-      prefix = "10.0.70.0/24"
+      name   = "GatewaySubnet"
+      prefix = "10.0.90.0/24"
     },
     {
       name   = "bsore-FrontEnd"
