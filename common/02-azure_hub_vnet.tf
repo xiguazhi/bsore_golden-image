@@ -62,6 +62,6 @@ resource "azurerm_virtual_network_gateway" "s2s" {
     name                          = "vnetGatewayConfig"
     public_ip_address_id          = azurerm_public_ip.ip.id
     private_ip_address_allocation = "Dynamic"
-    subnet_id                     = azurerm_subnet.sub["bsore-Gateway"].id
+    subnet_id                     = azurerm_subnet.sub["GatewaySubnet"].id
   }
 }
