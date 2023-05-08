@@ -29,7 +29,7 @@ resource "azurerm_public_ip" "ip" {
   allocation_method   = "Dynamic"
 }
 
-resource "azurerm_local_networK_gateway" "home" {
+resource "azurerm_local_network_gateway" "home" {
   name                = "bsore-wy-hub-lng"
   resource_group_name = data.azurerm_resource_group.bsore-west2-hub.name
   location            = data.azurerm_resource_group.bsore-west2-hub.location
