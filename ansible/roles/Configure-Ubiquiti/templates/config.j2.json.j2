@@ -543,7 +543,7 @@
                                         "pptp",
                                         "vti"
                                 ],
-                                "mss": "1452"
+                                "mss": "1350"
                         },
                         "mss-clamp6": {
                                 "interface-type": [
@@ -560,9 +560,20 @@
         },
         "protocols": {
                 "bgp": {
-                        "65515": {
+                        "65510": {
                                 "neighbor": {
-
+                                        "10.0.90.254": {
+                                                "ebgp-multihop": "4",
+                                                "prefix-list": {
+                                                        "export": "BGP",
+                                                        "import": "BGP"
+                                                },
+                                                "remote-as": "65515",
+                                                "soft-reconfiguration": {
+                                                        "inbound": "''"
+                                                },
+                                                "update-source": "10.0.4.1"
+20.165.195.19
                                 }
                         }
                 }
@@ -703,6 +714,11 @@
                 },
                 "loopback": {
                         "lo": "''"
+                },
+                "vti": {
+                        "vti0": {
+                                "mtu": "1436"
+                        }
                 }
         },
         "port-forward": {

@@ -2,10 +2,11 @@ variable "node_count" {}
 variable "environment" {}
 variable "vsphere_user" {}
 variable "vsphere_password" {}
+variable "shared_key" {}
 variable "subnets" {
   type = list(object(
     {
-      name = string
+      name   = string
       prefix = string
     }
   ))
