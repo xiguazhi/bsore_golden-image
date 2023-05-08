@@ -9,7 +9,7 @@ locals {
 resource "azurerm_virtual_network" "vnet" {
   name                = "bsore-na26-wy-hub-vnet"
   location            = data.azurerm_resource_group.bsore-west2-hub.location
-  resource_group_name = data.azurerm_resoure_group.bsore-west2-hub.name
+  resource_group_name = data.azurerm_resource_group.bsore-west2-hub.name
   address_space       = [for subnet in var.subnets : subnet.prefix]
 }
 
