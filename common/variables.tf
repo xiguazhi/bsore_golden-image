@@ -3,6 +3,13 @@ variable "environment" {}
 variable "vsphere_user" {}
 variable "vsphere_password" {}
 variable "subnets" {
+  type = list(object(
+    {
+      name = string
+      prefix = string
+    }
+  ))
+  description = "subnets for VNET and subnet creation in azure"
   default = [
     {
       name   = "bsore-Gateway"

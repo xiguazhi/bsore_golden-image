@@ -28,4 +28,14 @@ module "hub_vnet" {
   environment      = "dev"
   vsphere_user     = var.vsphere_user
   vsphere_password = var.vsphere_password
+  subnets = [
+    {
+      name   = "bsore-Gateway"
+      prefix = "10.0.70.0/24"
+    },
+    {
+      name   = "bsore-FrontEnd"
+      prefix = "10.0.80.0/24"
+    }
+  ]
 }

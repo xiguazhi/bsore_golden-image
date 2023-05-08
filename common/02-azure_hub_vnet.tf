@@ -1,8 +1,15 @@
 locals {
-  subnets = [for subnet in tomap(var.subnets) : {
-    name   = subnet.name
-    prefix = subnet.prefix
-  }]
+  hubvnet = [
+    {
+      name   = "bsore-Gateway"
+      prefix = "10.0.70.0/24"
+    },
+    {
+      name   = "bsore-FrontEnd"
+      prefix = "10.0.80.0/24"
+    }
+  ]
+  subnets = {for subnet in var.subnets : subnet.name => { name: subnet.name, prefix: subnet.prefix }}
 
 }
 
