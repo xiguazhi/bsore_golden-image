@@ -42,3 +42,7 @@
     tags:
     - ever
     - Install-Bind
+
+# - name: Configure Unifi server
+  # hosts: network
+  # become: true

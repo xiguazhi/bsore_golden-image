@@ -1,0 +1,14 @@
+---
+- name: Install packages required for Unifi
+  apt:
+    name: 
+    - apt-transport-https
+    - ca-certificates
+    - nginx
+    - software-properties-common
+  
+- name: Add repos for certbot
+  shell: |
+    add-apt-repository ppa:certbot/certbot
+    
+
