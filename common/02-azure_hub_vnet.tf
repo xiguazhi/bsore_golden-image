@@ -1,7 +1,7 @@
 locals {
   hubvnet = [
     {
-      name   = "bsore-Gateway"
+      name   = "GatewaySubnet"
       prefix = "10.0.70.0/24"
     },
     {
