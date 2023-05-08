@@ -52,7 +52,7 @@ resource "azurerm_virtual_network_gateway" "s2s" {
   vpn_type            = "RouteBased"
   active_active       = false
   enable_bgp          = true
-  sku                 = "Basic"
+  sku                 = "VpnGw1"
 
   bgp_settings {
     asn = "65515"
