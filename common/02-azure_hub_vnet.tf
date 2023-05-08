@@ -9,7 +9,7 @@ locals {
       prefix = "10.0.80.0/24"
     }
   ]
-  subnets = {for subnet in var.subnets : subnet.name => { name: subnet.name, prefix: subnet.prefix }}
+  subnets = { for subnet in var.subnets : subnet.name => { name : subnet.name, prefix : subnet.prefix } }
 
 }
 
@@ -64,4 +64,14 @@ resource "azurerm_virtual_network_gateway" "s2s" {
     private_ip_address_allocation = "Dynamic"
     subnet_id                     = azurerm_subnet.sub["GatewaySubnet"].id
   }
+}
+
+resource "azurerm_virtual_network_gateway_connection" "onprem" {
+  name                       = "bsore-wy-hub-vgwconn"
+  location                   = data.azurerm_resource_group.bsore-west2-hub.location
+  resource_group_name        = data.azurerm_resource_group.bsore-west2-hub.name
+  type                       = "IPsec"
+  virtual_network_gateway_id = azurerm_virtual_network_gateway.s2s.id
+  local_network_gateway_id   = azurerm_local_network_gateway.home.id
+  shared_key                 = var.shared_key
 }

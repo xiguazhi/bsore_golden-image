@@ -27,6 +27,7 @@ module "hub_vnet" {
   node_count       = 3
   environment      = "dev"
   vsphere_user     = var.vsphere_user
+  shared_key       = var.shared_key
   vsphere_password = var.vsphere_password
   subnets = [
     {

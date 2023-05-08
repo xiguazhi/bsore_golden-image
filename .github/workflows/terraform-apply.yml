@@ -11,6 +11,7 @@ env:
   ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
   TF_VAR_vsphere_user: "${{ secrets.VSPHER_USER }}"
   TF_VAR_vsphere_password: "${{ secrets.VSPHERE_PASSWORD }}"
+  TF_VAR_shared_key: "${{ secrets.VGW_SHARED_KEY }}"
 jobs:
   terraform-dev:
     name: 'Terraform Deploy'
