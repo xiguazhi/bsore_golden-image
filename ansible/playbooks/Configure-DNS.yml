@@ -19,15 +19,15 @@
     ansible_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
     become_password: "{{ ansible_password }}"
     bind__allow_query:
-      - '192.168.1.0/24'
+      - '10.0.0.0/8'
       - 'localhost'
     bind__listen_on:
-      - 192.168.1.10
+      - 10.0.30.167
       - 127.0.0.1
     bind__allow_recursion: '192.168.1.0/24'
     bind__empty_contact: 'admin@example.com'
     bind__global_zones:
-      'test.example.local':
+      'bsorenson.io':
         type: 'master'
         file: 'auto'
         entries:
@@ -42,7 +42,16 @@
     tags:
     - ever
     - Install-Bind
+    - Configure-Infra
 
-# - name: Configure Unifi server
-  # hosts: network
-  # become: true
+- name: Configure Unifi server
+  hosts: network
+  become: true
+  vars:
+  roles:
+  - role: Configure-Ubiquiti
+    tags:
+    - ever
+    - Configure-Ubiquiti
+    - Configure-Infra
+
