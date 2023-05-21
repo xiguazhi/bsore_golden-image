@@ -573,11 +573,70 @@
                                                         "inbound": "''"
                                                 },
                                                 "update-source": "10.0.4.1"
-20.165.195.19
+                                        }
+                                },
+                                "parameters": {
+                                        "router-id": "10.0.4.1"
+                                }
+                                "network": {
+                                        "10.0.0.0/18": "''"
+                                },
+                                "timers": {
+                                        "holdtime": "180",
+                                        "keepalive": "60"
+                                }
+                        }
+                },
+                "static": {
+                        "interface-route": {
+                                "10.0.90.254" : {
+                                        "next-hop-interface": {
+                                                "vti0": "''"
+                                        }
                                 }
                         }
                 }
-        } 
+        },
+20.165.195.19
+        "policy": {
+                "prefix-list": {
+                        "BGP": {
+                                "rule": {
+                                        "10": {
+                                                "action": "deny",
+                                                "description": "deny-localgw",
+                                                "prefix": "199.192.99.26/32"
+                                        },
+                                        "20":{
+                                                "action": "deny",
+                                                "description": "deny-azuregw",
+                                                "prefix": "20.165.195.19/32"
+                                        },
+                                        "30":{
+                                                "action": "deny",
+                                                "description": "deny-azuregw",
+                                                "prefix": "10.0.4.1"
+                                        },
+                                        "40":{
+                                                "action": "deny",
+                                                "description": "deny-azuregw",
+                                                "prefix": "10.0.90.254/32"
+                                        },
+                                        "100": {
+                                                "action": "permit",
+                                                "description": "permit-localsubnet",
+                                                "prefix": "10.0.0.0/18"
+                                        },
+                                        "110": {
+                                                "action": "permit",
+                                                "description": "permit-remotesubnet",
+                                                "ge": "16",
+                                                "prefix": "10.0.0.64/18"
+                                        }
+                                }
+                        }
+                }
+        },
         "interfaces": {
                 "ethernet": {
                         "eth0": {
@@ -1125,6 +1184,7 @@
                                 "setup.ubnt.com": {
                                         "alias": [
                                                 "setup"
+                                                "lab"
                                         ],
                                         "inet": [
                                                 "10.0.4.1"
@@ -1157,47 +1217,55 @@
         },
         "vpn": {
                 "ipsec": {
-                        "ipsec-interfaces": {
-                                "interface": [
-                                        "eth2"
-                                ]
-                        },
-                        "nat-networks": {
-                                "allowed-network": {
-                                        "0.0.0.0/0": "''"
+                        "auto-firewall-nat-exclude": "enable",
+                        "esp-group": {
+                                "VWAN01": {
+                                        "compression": "disable",
+                                        "lifetime": "27000",
+                                        "mode": "tunnel",
+                                        "pfs": "disable",
+                                        "proposal": {
+                                                "1": {
+                                                        "encryption": "aes256",
+                                                        "hash": "sha1"
+                                                }
+                                        }
                                 }
                         },
-                        "nat-traversal": "enable"
-                },
-                "l2tp": {
-                        "remote-access": {
-                                "authentication": {
-                                        "mode": "radius",
-                                        "radius-server": {
-                                                "10.0.4.1": {
-                                                        "key": "1cbe991a14",
-                                                        "port": "1812"
+                        "ike-group": {
+                                "VWAN01": {
+                                        "ikev2-reauth": "no",
+                                        "key-exchange": "ikev2",
+                                        "lifetime": "28800",
+                                        "proposal": {
+                                                "1": {
+                                                        "dh-group": "2",
+                                                        "encryption": "aes256",
+                                                        "hash": "sha1"
                                                 }
-                                        },
-                                        "require": "mschap-v2"
-                                },
-                                "client-ip-pool": {
-                                        "start": "10.0.50.6",
-                                        "stop": "10.0.50.254"
-                                },
-                                "dhcp-interface": "eth2",
-                                "dns-servers": {
-                                        "server-1": "1.1.1.1",
-                                        "server-2": "1.0.0.1"
-                                },
-                                "ipsec-settings": {
-                                        "authentication": {
-                                                "mode": "pre-shared-secret",
-                                                "pre-shared-secret": "1cbe991a14"
-                                        },
-                                        "ike-lifetime": "3600"
+                                        }
+                                }
+                        },
+                        "site-to-site": {
+                                "peer": {
+                                        "20.165.195.19": {
+                                                "authentication": {
+                                                        "mode": "pre-shared-secret",
+                                                        "pre-shared-secret": "j6gYR3nT2CVQ9M-KWAty@UhR"
+                                                },
+                                                "connection-type": "respond",
+                                                "description": "ipsec",
+                                                "ike-group": "VWAN01",
+                                                "ikev2-reauth": "inherit",
+                                                "local-address": "199.192.99.26",
+                                                "vti": {
+                                                        "bind": "vti0",
+                                                        "esp-group": "VWAN01"
+                                                }
+                                        }
                                 }
                         }
                 }
+                
         }
 }
