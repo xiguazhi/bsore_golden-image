@@ -1,0 +1,15 @@
+---
+- name: See if unifi is installed
+  ansible.builtin.stat:
+    path: /usr/bin/unifi
+
+- name: Copy gateway config template
+  ansible.builtin.template:
+    src: config.json.j2
+    dest: /usr/lib/unifi/data/sites/default/config.gateway.json
+    owner: unifi
+    group: unifi
+    mode: '0644'
+  notify:
+    - Restart nginx
+    - Restart unifi
