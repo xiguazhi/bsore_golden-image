@@ -5,6 +5,7 @@
     ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
     ansible_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
     become_password: "{{ ansible_password }}"
+    sudo_password: "{{ ansible_password }}"
   tasks:
   - name: Set hostname for each host
     ansible.builtin.hostname:
@@ -31,27 +32,32 @@
         type: 'master'
         file: 'auto'
         entries:
-          - { name: '@',                 type: 'NS',     data: 'ns1.bsorenson.io' }
-          - { name: 'bsd-bind01',        type: 'A',      data: '10.0.30.167'      }
-          - { name: 'bsd-kubespray01',   type: 'A',      data: '10.0.30.164'      }
-          - { name: 'bsd-kubesrpay02',   type: 'A',      data: '10.0.30.166'      }
-          - { name: 'bsd-kubesrpay03',   type: 'A',      data: '10.0.30.165'      }
-          - { name: 'bsp1-ansible',      type: 'A',      data: '10.0.30.145'      }
+          - name: '@'
+            type: 'NS'     
+            data: 'ns1.bsorenson.io'
+          - name: 'bsd-bind01'
+            type: 'A'
+            data: '10.0.30.167'
+          - name: 'bsd-kubespray01'
+            type: 'A'
+            data: '10.0.30.164'
+          - name: 'bsd-kubesrpay02'
+            type: 'A'
+            data: '10.0.30.166'
+          - name: 'bsd-kubesrpay03'
+            type: 'A'
+            data: '10.0.30.165'
+          - name: 'bsp1-ansible'
+            type: 'A'
+            data: '10.0.30.145'
+          - name: 'ns1.bsorenson.io'
+            type: 'A'
+            data: '10.0.30.167'
   roles:
-  - role: Install-Bind
-    tags:
-    - ever
-    - Install-Bind
-    - Configure-Infra
+    - role: Install-Bind
+      tags:
+      - ever
+      - Install-Bind
+      - Configure-Infra
 
-- name: Configure Unifi server
-  hosts: network
-  become: true
-  vars:
-  roles:
-  - role: Configure-Ubiquiti
-    tags:
-    - ever
-    - Configure-Ubiquiti
-    - Configure-Infra
 

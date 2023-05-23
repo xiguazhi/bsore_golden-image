@@ -4,7 +4,7 @@
 
 - name: Install nginx and snapd
   ansible.builtin.apt:
-    pkg:
+    name:
     - nginx
     - certbot
     - python3-certbot
