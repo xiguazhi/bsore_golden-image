@@ -1,6 +1,7 @@
 - name: Configure Unifi server
   hosts: network
   become: true
+  gather_facts: true
   vars:
     ANSIBLE_USER: "{{ lookup('env', 'ANSIBLE_USER') }}"
     ANSIBLE_PASSWORD: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
