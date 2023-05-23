@@ -40,7 +40,7 @@ resource "azurerm_local_network_gateway" "home" {
   name                = "bsore-wy-hub-lng"
   resource_group_name = data.azurerm_resource_group.bsore-west2-hub.name
   location            = data.azurerm_resource_group.bsore-west2-hub.location
-  gateway_address     = "199.192.99.26"
+  gateway_address     = "208.83.226.77"
   address_space       = ["10.0.0.0/18"]
 }
 
@@ -53,10 +53,6 @@ resource "azurerm_virtual_network_gateway" "s2s" {
   active_active       = false
   enable_bgp          = false
   sku                 = "Basic"
-
-  bgp_settings {
-    asn = "65515"
-  }
 
   ip_configuration {
     name                          = "vnetGatewayConfig"

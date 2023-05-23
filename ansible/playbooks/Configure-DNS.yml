@@ -44,14 +44,4 @@
     - Install-Bind
     - Configure-Infra
 
-- name: Configure Unifi server
-  hosts: network
-  become: true
-  vars:
-  roles:
-  - role: Configure-Ubiquiti
-    tags:
-    - ever
-    - Configure-Ubiquiti
-    - Configure-Infra
 

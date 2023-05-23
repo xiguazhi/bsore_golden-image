@@ -16,8 +16,6 @@
 
 - name: Import tasks for unifi installation and config
   ansible.builtin.import_tasks: install-unifi.yml
-    - 
-    
-  
+
 - name: Configure Unifi controller
   ansible.builtin.import_tasks: configure-controller.yml
