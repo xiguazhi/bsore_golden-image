@@ -1,0 +1,12 @@
+---
+- name: Download applications
+  ansible.builtin.apt:
+    pkg:
+    - curl
+    - haveged
+    - gpg
+    - openjdk-8-jre-headless
+
+- name: Install unifi
+  ansible.builtin.apt:
+    deb: https://dl.ui.com/unifi/7.3.83/unifi_sysvinit_all.deb

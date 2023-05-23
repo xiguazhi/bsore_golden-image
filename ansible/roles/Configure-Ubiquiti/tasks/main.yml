@@ -7,8 +7,17 @@
     - nginx
     - software-properties-common
   
-- name: Add repos for certbot
-  shell: |
-    add-apt-repository ppa:certbot/certbot
-    
 
+- name: Import tasks for nginx installation
+  ansible.builtin.import_tasks:
+  with_first_found: 
+    - "install-nginx-{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yml"
+    - install-nginx-{{ansible-distribution }}.yml
+
+- name: Import tasks for unifi installation and config
+  ansible.builtin.import_tasks: install-unifi.yml
+    - 
+    
+  
+- name: Configure Unifi controller
+  ansible.builtin.import_tasks: configure-controller.yml

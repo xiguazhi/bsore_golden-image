@@ -1,0 +1,11 @@
+- name: Add repos for certbot
+  shell: |
+    sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
+
+- name: Install certbot
+  dnf:
+    name:
+    - certbot 
+    - python3-certbot-nginx 
+    - python3-certbot-dns-route53
+  state: latest
