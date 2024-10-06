@@ -1,0 +1,29 @@
+- name: Configuring Golden Image
+  hosts: all
+  connection: local
+  become: true
+  vars:
+    ANSIBLE_USER: "{{ lookup('env', 'ANSIBLE_USER') }}"
+    ANSIBLE_PASSWORD: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+    ansible_become_password: "{{ ANSIBLE_PASSWORD }}"
+  roles:
+  - name: Update-CentOS
+    tags:
+    - Update-CentOS
+    - ever
+  - name: Install-Python
+    tags:
+    - Install-Python
+    - ever
+  - name: Create-User
+    tags:
+    - Create-User
+    - ever
+  - name: Install-SSH-Keys 
+    tags:
+    - Install-SSH-Keys
+    - ever
+  - name: Add-Sudoers
+    tags:
+    - ever
+    - Add-Sudoers

@@ -1,0 +1,27 @@
+---
+- name: Download applications
+  ansible.builtin.apt:
+    pkg:
+    - curl
+    - haveged
+    - gpg
+    - openjdk-8-jre-headless
+
+- name: Install unifi
+  ansible.builtin.apt:
+    deb: https://dl.ui.com/unifi/7.3.83/unifi_sysvinit_all.deb
+
+
+- name: Extract Certificate from unifi
+  shell: |
+    keytool -list -v keystore keystore
+    keytool -export -keystore keystore -alias unifi -file unifi.cer
+    openssl x509 -inform der -in cert.cer -out unifi.pem
+
+- name: Copy new Unifi.pem to nginx
+  copy:
+    src: /var/lib/unifi/unifi.pem
+    dest: /etc/nginx/ssl/default/unifi.pem
+    owner: root
+    group: root
+    mode: 0644

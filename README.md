@@ -21,5 +21,3 @@
 2. VNETS
    1. Hub, ECR and Test
 
-
-Talking to @notsoErudite about Kidology's CONSTANT REJECTION | MrGirl UNFOLLOWS Kidology???

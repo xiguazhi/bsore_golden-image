@@ -1,0 +1,18 @@
+{
+    "Name":  "bsore-wy-hub-rgrp-adm",
+    "IsCustom":  true,
+    "Description":  "Manage the power state of virtual machines, but nothing else.",
+    "Actions": [
+      "*"
+    ],
+    "NotActions": [
+        "Microsoft.Authorization/*/Delete",
+        "Microsoft.Authorization/*/Write",
+        "Microsoft.Authorization/elevateAccess/Action",
+        "Microsoft.Blueprint/blueprintAssignments/write",
+        "Microsoft.Blueprint/blueprintAssignments/delete"
+      ],
+    "AssignableScopes": [
+      "/subscriptions/9b90f468-6730-4bfb-909e-cb2409e8fcf6/resourceGroups/bsore-wy-hub-rgrp"
+    ]
+  }

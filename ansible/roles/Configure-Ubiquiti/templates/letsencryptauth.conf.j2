@@ -1,0 +1,5 @@
+location /.well-known/acme-challenge {
+    alias /var/www/default/html/.well-known/acme-challenge;
+    location ~ /.well-known/acme-challenge/(.*) {
+        add_header Content-Type application/jose+json;
+    }

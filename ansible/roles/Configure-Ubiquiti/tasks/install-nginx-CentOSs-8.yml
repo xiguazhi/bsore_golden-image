@@ -1,0 +1,44 @@
+- name: Add repos for certbot
+  shell: |
+    sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
+
+- name: Install certbot
+  dnf:
+    name:
+    - nginx
+    - certbot 
+    - python3-certbot-nginx 
+    - python3-certbot-dns-route53
+  state: latest
+
+
+- name: Set firewall rules
+  shell: |
+    ufw allow 'Nginx Full'
+    ufw delete allow 'Nginx HTTP'
+
+- name: Create Cert
+  shell: |
+    export AWS_ACCESS_KEY_ID={{ AWS_ACCESS_KEY_ID }}
+    export AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}
+    certbot certonly --dns-route53 -d unifi.bsorenson.io
+  no_log: true
+
+- name: Create nginx server config for Ubiquiti Reverse proxy
+  ansible.builtin.template:
+    src: unifi.bsorenson.io.j2
+    dest: /etc/nginx/sites-available/unifi.bsorenson.io
+
+- name: Nginx create symbolic link to enable Nginx reverse proxy
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/unifi.bsorenson.io
+    dest: /etc/nginx/sites-enabled/unifi.bsorenson.io
+    state: link
+    owner: nginx
+    group: nginx
+    mode: '0644'
+
+- name: Create nginx server primary config
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf

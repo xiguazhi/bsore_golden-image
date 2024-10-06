@@ -1,0 +1,63 @@
+- name: Set Hostname on all hosts based on hosts inventory file
+  hosts: all
+  become: true
+  vars:
+    ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
+    ansible_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+    become_password: "{{ ansible_password }}"
+    sudo_password: "{{ ansible_password }}"
+  tasks:
+  - name: Set hostname for each host
+    ansible.builtin.hostname:
+      name: "{{ inventory_hostname }}"
+      use: systemd
+
+- name: Configure DNS server on server
+  hosts: dns_servers
+  become: true
+  vars:
+    ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
+    ansible_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+    become_password: "{{ ansible_password }}"
+    bind__allow_query:
+      - '10.0.0.0/8'
+      - 'localhost'
+    bind__listen_on:
+      - 10.0.30.167
+      - 127.0.0.1
+    bind__allow_recursion: '192.168.1.0/24'
+    bind__empty_contact: 'admin@example.com'
+    bind__global_zones:
+      'bsorenson.io':
+        type: 'master'
+        file: 'auto'
+        entries:
+          - name: '@'
+            type: 'NS'     
+            data: 'ns1.bsorenson.io'
+          - name: 'bsd-bind01'
+            type: 'A'
+            data: '10.0.30.167'
+          - name: 'bsd-kubespray01'
+            type: 'A'
+            data: '10.0.30.164'
+          - name: 'bsd-kubesrpay02'
+            type: 'A'
+            data: '10.0.30.166'
+          - name: 'bsd-kubesrpay03'
+            type: 'A'
+            data: '10.0.30.165'
+          - name: 'bsp1-ansible'
+            type: 'A'
+            data: '10.0.30.145'
+          - name: 'ns1.bsorenson.io'
+            type: 'A'
+            data: '10.0.30.167'
+  roles:
+    - role: Install-Bind
+      tags:
+      - ever
+      - Install-Bind
+      - Configure-Infra
+
+
