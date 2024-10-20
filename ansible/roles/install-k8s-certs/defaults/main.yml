@@ -1,0 +1,9 @@
+---
+# defaults file for install-k8s-certs
+cert_CNs:
+  - "admin" 
+  - "kube-proxy" 
+  - "kube-scheduler"
+  - "kube-controller-manager"
+  - "kube-api-server"
+  - "service-accounts"

@@ -1,25 +1,5 @@
-- name: Configuring Golden Image
-  hosts: kubernetes
-  connection: ssh
-  become: true
-  roles:
-  - name: Install-Python
-    tags:
-    - Install-Python
-    - ever
-  - name: Install-SSH-Keys 
-    tags:
-    - Install-SSH-Keys
-    - ever
-  - name: Add-Sudoers
-    tags:
-    - ever
-    - Add-Sudoers
-  tasks:
-  - name: Update Ubuntu
-    apt:
-      name: "*"
-      state: latest
+---
+# tasks file for install-k8s-certs
 
   - name: Make directory for certificates for Kubernetes
     file:
@@ -66,7 +46,7 @@
     community.crypto.openssl_privatekey:
       path: ~/certs/{{ ansible_hostname }}.key
 
-  - name: Create CSR for {{ ansible_hostname }}
+  - name: Create CSR for {{ ansible_hostname }}'s
     community.crypto.openssl_csr_pipe:
     privatekey_path: ~/certs/{{ ansible_hostname }}.key
     subject_alt_name:
@@ -97,7 +77,12 @@
 
   - name: Write Cert files to servers
     copy:
-      dest: ~/certs/{{ ansible_hostname }}.pem
+      dest: ~/certs/{{ cert_CNs }}.pem
       content: "{{ ansible_hostname }}_cert.certificate"
 
-  - name: 
+  - name:  Create Private key for services {{ item }}
+    community.crypto.openssl_privatekey:
+      path: ~/certs/{{ item }}
+    with_items:
+    - cert_CNs
+    delegate_to: bsd-k8master01

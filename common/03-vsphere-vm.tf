@@ -1,7 +1,7 @@
-module "kubespray" {
+module "k8s" {
   source           = "git@github.com:xiguazhi/terraform-vsphere.git//modules/wtw-vm-linux"
   environment      = var.environment
-  vmtemp           = "template-centos8_64guest"
+  vmtemp           = "Ubuntu2004"
   application_name = "kubespray"
   node_count       = var.node_count
   vsphere_user     = var.vsphere_user
@@ -28,5 +28,3 @@ module "dns" {
   ipv4_gateway     = "10.0.30.1"
   ipv4submask      = ["24"]
 }
-
-

@@ -1,7 +1,0 @@
----
-- lineinfile:
-    path: /etc/sudoers.d/01_Base
-    state: present
-    line: '%admins ALL=(ALL) NOPASSWD: ALL'
-    validate: '/usr/sbin/visudo -cf %s'
-    create: true
