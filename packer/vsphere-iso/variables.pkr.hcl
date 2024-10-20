@@ -345,6 +345,7 @@ variable "build_password_encrypted" {
   type        = string
   description = "The SHA-512 encrypted password to login to the guest operating system."
   sensitive   = true
+  default = env("BUILD_PASSWORD_ENCRYPTED")
 }
 
 variable "build_key" {

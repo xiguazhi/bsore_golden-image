@@ -11,7 +11,7 @@
 
 - name: check if executable is already installed
   stat:
-    path: /usr/local/bin/python3.10
+    path: /usr/local/bin/python{{PYTHON_VERSION}}
   register: python310
 
 

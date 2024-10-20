@@ -32,6 +32,7 @@ variable "vsphere_password" {
 variable "vsphere_insecure_connection" {
   type        = bool
   description = "Do not validate vCenter Server TLS certificate."
+  default = true
 }
 
 // vSphere Settings
@@ -81,6 +82,39 @@ variable "vsphere_set_host_for_datastore_uploads" {
   description = "Set this to true if packer should use the host for uploading files to the datastore."
   default     = false
 }
+
+// VM Network Settings
+
+variable "vm_network_device" {
+  type        = string
+  description = "The network device of the VM."
+  default     = "ens192"
+}
+
+variable "vm_ip_address" {
+  type        = string
+  description = "The IP address of the VM (e.g. 172.16.100.192)."
+  default     = null
+}
+
+variable "vm_ip_netmask" {
+  type        = number
+  description = "The netmask of the VM (e.g. 24)."
+  default     = null
+}
+
+variable "vm_ip_gateway" {
+  type        = string
+  description = "The gateway of the VM (e.g. 172.16.100.1)."
+  default     = null
+}
+
+variable "vm_dns_list" {
+  type        = list(string)
+  description = "The nameservers of the VM."
+  default     = []
+}
+
 
 // Virtual Machine Settings
 
@@ -286,16 +320,19 @@ variable "common_iso_content_library" {
 variable "common_iso_datastore" {
   type        = string
   description = "The name of the target vSphere datastore for the guest operating system ISO."
+  default = "samsung"
 }
 
 variable "iso_datastore_path" {
   type        = string
   description = "The path on the source vSphere datastore for the guest operating system ISO."
+  default = "ISOs/"
 }
 
 variable "iso_file" {
   type        = string
   description = "The file name of the guest operating system ISO."
+  default = "Ubuntu2004.iso"
 }
 
 variable "iso_content_library_item" {
@@ -319,11 +356,13 @@ variable "common_http_ip" {
 variable "common_http_port_min" {
   type        = number
   description = "The start of the HTTP port range."
+  default = "8080"
 }
 
 variable "common_http_port_max" {
   type        = number
   description = "The end of the HTTP port range."
+  default = "8090"
 }
 
 variable "vm_boot_order" {

@@ -1,0 +1,18 @@
+{
+  "Name":  "azureadmanagement",
+  "IsCustom":  true,
+  "Description":  "Manage AzureAD Service Principals.",
+  "Actions": [
+    "*"
+  ],
+  "NotActions": [
+      "Microsoft.Authorization/*/Delete",
+      "Microsoft.Authorization/*/Write",
+      "Microsoft.Authorization/elevateAccess/Action",
+      "Microsoft.Blueprint/blueprintAssignments/write",
+      "Microsoft.Blueprint/blueprintAssignments/delete"
+    ],
+  "AssignableScopes": [
+"
+  ]
+}

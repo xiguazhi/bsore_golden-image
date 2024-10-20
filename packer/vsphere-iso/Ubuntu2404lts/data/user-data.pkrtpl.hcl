@@ -41,5 +41,6 @@ ${network}
     timezone: ${vm_guest_os_timezone}
   late-commands:
     - sed -i -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /target/etc/ssh/sshd_config
+    - sed -i -e 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/g' /target/etc/ssh/sshd_config
     - echo '${build_username} ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/${build_username}
     - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/${build_username}

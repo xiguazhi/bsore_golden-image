@@ -16,7 +16,7 @@ packer {
 // Defines the local variables
 
 locals {
-  build_by = "Built by: Brandon SOrenson ${packer.version}"
+  build_by = "Built by: Brandon Sorenson ${packer.version}"
   build_date = formatdate("YYYY-MM-DD hh:mm:ss zzz", timestamp())
   build_version = "1"
   build_description = "Version: ${local.build_version}\nBuilt on: ${local.build_date}\n${local.build_by}"
@@ -67,7 +67,7 @@ source "vsphere-iso" "linux-ubuntu" {
   vcenter_server = var.vsphere_endpoint
   username = var.vsphere_username
   password = var.vsphere_password
-  insecure_connection = true
+  vsphere_insecure_connection = true
 
   // vSpehre Settings
   datacenter = var.vsphere_datacenter
@@ -180,7 +180,7 @@ source "vsphere-iso" "linux-ubuntu" {
 
 build {
   sources = ["source.vsphere-iso.linux-ubuntu"]
-  provisioner "ansihble" {
+  provisioner "ansible" {
     user = var.build_username
     galaxy_file = "${path.cwd}/ansible/linux-requirements.yml"
     galaxy_force_with_deps = true
@@ -198,5 +198,48 @@ build {
       "--extra-vars", "enable_cloudinit=${var.vm_guest_os_cloudinit}",
     ]
   }
+  post-processor "manifest" {
+    output     = local.manifest_output
+    strip_path = true
+    strip_time = true
+    custom_data = {
+      ansible_username         = var.ansible_username
+      build_username           = var.build_username
+      build_date               = local.build_date
+      build_version            = local.build_version
+      common_data_source       = var.common_data_source
+      common_vm_version        = var.common_vm_version
+      vm_cpu_cores             = var.vm_cpu_cores
+      vm_cpu_count             = var.vm_cpu_count
+      vm_disk_size             = var.vm_disk_size
+      vm_disk_thin_provisioned = var.vm_disk_thin_provisioned
+      vm_firmware              = var.vm_firmware
+      vm_guest_os_type         = var.vm_guest_os_type
+      vm_mem_size              = var.vm_mem_size
+      vm_network_card          = var.vm_network_card
+      vsphere_cluster          = var.vsphere_cluster
+      vsphere_host             = var.vsphere_host
+      vsphere_datacenter       = var.vsphere_datacenter
+      vsphere_datastore        = var.vsphere_datastore
+      vsphere_endpoint         = var.vsphere_endpoint
+      vsphere_folder           = var.vsphere_folder
+    }
+  }
 
+  dynamic "hcp_packer_registry" {
+    for_each = var.common_hcp_packer_registry_enabled ? [1] : []
+    content {
+      bucket_name = local.bucket_name
+      description = local.bucket_description
+      bucket_labels = {
+        "os_family" : var.vm_guest_os_family,
+        "os_name" : var.vm_guest_os_name,
+        "os_version" : var.vm_guest_os_version,
+      }
+      build_labels = {
+        "build_version" : local.build_version,
+        "packer_version" : packer.version,
+      }
+    }
+  }
   }

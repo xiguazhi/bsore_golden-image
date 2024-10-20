@@ -1,23 +1,11 @@
 - name: Configuring Golden Image
-  hosts: all
-  connection: local
+  hosts: kubernetes
+  connection: ssh
   become: true
-  vars:
-    ANSIBLE_USER: "{{ lookup('env', 'ANSIBLE_USER') }}"
-    ANSIBLE_PASSWORD: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
-    ansible_become_password: "{{ ANSIBLE_PASSWORD }}"
   roles:
-  - name: Update-CentOS
-    tags:
-    - Update-CentOS
-    - ever
   - name: Install-Python
     tags:
     - Install-Python
-    - ever
-  - name: Create-User
-    tags:
-    - Create-User
     - ever
   - name: Install-SSH-Keys 
     tags:
@@ -27,3 +15,89 @@
     tags:
     - ever
     - Add-Sudoers
+  tasks:
+  - name: Update Ubuntu
+    apt:
+      name: "*"
+      state: latest
+
+  - name: Make directory for certificates for Kubernetes
+    file:
+      path: ~/certs/
+      owner: ansible
+      group: ansible
+      mode: '0750'
+      state: directory
+
+  - name: Create private key with password protection
+    community.crypto.openssl_privatekey:
+      path: ~/certs/ca-certificate.key
+      passphrase: "{{ secret_ca_passphrase }}"
+    delegate_to: bsd-k8master01
+    run_once: true
+
+  - name: Create certificate signing request (CSR) for CA certificate
+    community.crypto.openssl_csr_pipe:
+      privatekey_path: ~/certs/ca-certificate.key
+      privatekey_passphrase: "{{ secret_ca_passphrase }}"
+      common_name: Ansible CA
+      use_common_name_for_san: false  # since we do not specify SANs, don't use CN as a SAN
+      basic_constraints:
+        - 'CA:TRUE'
+      basic_constraints_critical: true
+      key_usage:
+        - keyCertSign
+      key_usage_critical: true
+    register: ca_csr
+    delegate_to: bsd-k8master01
+    run_once: true
+
+  - name: Create self-signed CA certificate from CSR
+    community.crypto.x509_certificate:
+      path: ~/certs/ca-certificate.pem
+      csr_content: "{{ ca_csr.csr }}"
+      privatekey_path: /path/to/ca-certificate.key
+      privatekey_passphrase: "{{ secret_ca_passphrase }}"
+      provider: selfsigned
+    delegate_to: bsd-k8master01
+    run_once: true
+    
+  - name: Create Private Key for new {{ ansible_hostname }}
+    community.crypto.openssl_privatekey:
+      path: ~/certs/{{ ansible_hostname }}.key
+
+  - name: Create CSR for {{ ansible_hostname }}
+    community.crypto.openssl_csr_pipe:
+    privatekey_path: ~/certs/{{ ansible_hostname }}.key
+    subject_alt_name:
+      - "DNS:{{ ansible_hostname }}"
+      - "DNS: {{ ansible_hostname }}.bsorenson.io"
+      - "DNS: {{ ansible_host }}"
+    register: "{{ ansible_hostname }}_csr"
+
+  - name: Read existing certificate if exists
+    slurp:
+      src: /path/to/certificate.pem
+    when: certificate_exists.stat.exists
+    delegate_to: server_1
+    run_once: true
+    register: certificate
+
+  - name: Sign cert with CA
+    community.crypto.x509.certificate_pipe:
+      csr_content: "{{ ansible_hostname }}_csr.csr"
+      provider: ownca
+      ownca_path: ~/certs/ca-certificate.pem
+      ownca_privatekey_path: ~/certs/ca-certificate.key
+      ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
+      ownca_not_after: +365d # 1 year
+      ownca_not_before: "-1d" # valid since yesterday
+    delegate_to: bsd-k8master01
+    regsiter: "{{ ansible_hostname }}_cert"
+
+  - name: Write Cert files to servers
+    copy:
+      dest: ~/certs/{{ ansible_hostname }}.pem
+      content: "{{ ansible_hostname }}_cert.certificate"
+
+  - name: 
