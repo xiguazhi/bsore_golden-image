@@ -55,12 +55,15 @@
       - "DNS: {{ ansible_host }}"
     register: "{{ ansible_hostname }}_csr"
 
+  - name: Check whether cert exists
+    stat:
+      path: ~/certs/{{ ansible_hostname }}.pem
+    register: cert_exists
+
   - name: Read existing certificate if exists
     slurp:
-      src: /path/to/certificate.pem
+      src: ~/certs/{{ ansible_hostname }}.pem
     when: certificate_exists.stat.exists
-    delegate_to: server_1
-    run_once: true
     register: certificate
 
   - name: Sign cert with CA
@@ -77,8 +80,9 @@
 
   - name: Write Cert files to servers
     copy:
-      dest: ~/certs/{{ cert_CNs }}.pem
+      dest: ~/certs/{{ ansible_hostname }}.pem
       content: "{{ ansible_hostname }}_cert.certificate"
+    when: "{{ ansible_hostname }}_cert is changed"
 
   - name:  Create Private key for services {{ item }}
     community.crypto.openssl_privatekey:
@@ -86,3 +90,49 @@
     with_items:
     - cert_CNs
     delegate_to: bsd-k8master01
+    register: "{{ item }}_key"
+
+  - name: Create CSR for new service
+    community.crypto.openssl_csr_pipe:
+      privatekey_path: ~/certs/{{ item }}.key
+    run_once: true
+    delegate_to: bsd-k8master01
+    register: "{{ item }}.csr"
+
+  - name: Check if service cert files exists on server
+    stat:
+      path: ~/certs/{{ item }}.pem
+    with_items:
+      - cert_CNs
+    register: "{{ item }}_exists"
+    
+
+  - name: Read existing cert for service to see if it exists
+    slurp:
+      src: ~/certs/{{ item }}_key.key
+    when: "{{ item }}_exists.stat.exists"
+    with_items:
+      - cert_CNs
+    register: "{{ item }}_cert"
+
+
+  - name: Sign service cert with our CA
+    community.crypto.x509_certificate_pipe:
+      content: "{{ (item.content | b64decode)  if item_exists.stat.exists else omit }}"
+      csr_content: "{{ item }}.csr"
+      provider: ownca
+      ownca_path: ~/certs/ca-certificate.pem
+      ownca_privatekey_path: ~/certs/ca-certificate.key
+      ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
+      ownca_not_after: +365d
+      ownca_not_before: "-1d"
+    delegate_to: bsd-k8master01
+    register:  "{{ item }}_cert"
+    with_items:
+      - cert_CNs
+    
+  - name: Write service certificate file to worker servers
+    copy:
+      dest: ~/certs/{{ item }}.pem
+      content: "{{ item_cert.certificate }}"
+    when: "{{ item }}_cert is changed"
